@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Adriano de Sousa | CotaPlan</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --accent: #FF6B00;
+      --accent-glow: rgba(255, 107, 0, 0.28);
+    }
+    * { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; }
+    body { background-color: #0B0B0C; color: #F4F4F5; min-height: 100vh; overflow-x: hidden; }
+    .bg-grid {
+      background-image: 
+        linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+      background-size: 32px 32px;
+    }
+    .bg-radial { background: radial-gradient(circle at 50% 0%, rgba(255, 107, 0, 0.14) 0%, #0B0B0C 65%); }
+    .bg-carbon { background-color: #0B0B0C; background-image: radial-gradient(#1f1f23 1px, transparent 1px); background-size: 16px 16px; }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent) 0%, #E05A00 100%);
+      color: #FFFFFF;
+      box-shadow: 0 8px 24px -4px var(--accent-glow);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+    }
+    .btn-primary:hover { filter: brightness(1.06); transform: translateY(-2px); }
+    .btn-secondary { background-color: #161618; color: #F4F4F5; border: 1px solid #27272A; }
+    .btn-secondary:hover { background-color: #1E1E22; border-color: #3F3F46; transform: translateY(-2px); }
+    .btn-ghost { background-color: rgba(22, 22, 24, 0.45); color: #A1A1AA; border: 1px solid #222225; }
+    .btn-ghost:hover { color: #FFFFFF; border-color: #3F3F46; transform: translateY(-2px); }
+    .link-card { transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1); }
+    .link-card:active { transform: scale(0.985); }
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #0B0B0C; }
+    ::-webkit-scrollbar-thumb { background: #27272A; border-radius: 999px; }
+  </style>
+</head>
+<body class="bg-grid flex flex-col items-center justify-between px-5 py-10 relative">
+
+  <div class="pointer-events-none fixed top-0 left-1/2 -translate-x-1/2 w-[520px] h-[240px] rounded-full blur-[120px] opacity-25" id="ambientGlow" style="background: #FF6B00;"></div>
+
+  <!-- PÁGINA PÚBLICA -->
+  <main class="w-full max-w-[440px] z-10 flex flex-col items-center text-center my-auto">
+    <div class="relative mb-4">
+      <div class="w-24 h-24 rounded-full p-[3px] shadow-xl" id="avatarRing" style="background: linear-gradient(135deg, #FF6B00, #3F3F46);">
+        <div id="avatarFallback" class="w-full h-full rounded-full bg-[#161618] flex items-center justify-center text-2xl font-extrabold text-white tracking-tight">AS</div>
+        <img id="publicAvatar" src="" alt="Adriano de Sousa" class="hidden w-full h-full rounded-full object-cover bg-[#161618]" />
+      </div>
+      <span class="absolute bottom-1 right-1 w-4 h-4 rounded-full bg-emerald-500 border-2 border-[#0B0B0C]"></span>
+    </div>
+
+    <div id="publicBadge" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#161618] border border-[#27272A] text-[11px] font-semibold tracking-wider uppercase text-zinc-300 mb-3">
+      <span class="w-1.5 h-1.5 rounded-full" id="badgeDot" style="background-color: #FF6B00;"></span>
+      <span id="badgeText">CRIADOR DO COTAPLAN</span>
+    </div>
+
+    <h1 id="publicName" class="text-xl font-bold tracking-tight text-white">Adriano de Sousa</h1>
+    <p id="publicSubtitle" class="text-sm text-zinc-400 mt-1 max-w-[340px] leading-relaxed">Planejamento Civil & Industrial | Cybersecurity</p>
+
+    <div id="linksContainer" class="w-full mt-7 flex flex-col gap-3.5">
+      <div class="text-xs text-zinc-500 py-8">Carregando links...</div>
+    </div>
+  </main>
+
+  <!-- RODAPÉ -->
+  <footer class="w-full max-w-[440px] mt-12 pt-6 border-t border-zinc-900/80 flex items-center justify-between text-xs text-zinc-500 z-10">
+    <div class="flex items-center gap-2">
+      <span class="inline-block w-2 h-2 rounded-sm" id="footerDot" style="background-color: #FF6B00;"></span>
+      <span class="font-semibold text-zinc-400 tracking-wide">CotaPlan</span>
+    </div>
+    <button onclick="openAdminModal()" title="Administrar Página" class="p-2 rounded-lg text-zinc-600 hover:text-zinc-300 hover:bg-zinc-900 transition-colors flex items-center gap-1.5">
+      <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+      <span class="text-[11px]">Admin</span>
+    </button>
+  </footer>
+
+  <!-- MODAL DE LOGIN ADMIN -->
+  <div id="loginModal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="w-full max-w-[360px] bg-[#141416] border border-zinc-800 rounded-2xl p-6 shadow-2xl">
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="text-base font-bold text-white">Acesso Administrativo</h2>
+        <button onclick="closeLoginModal()" class="text-zinc-500 hover:text-white text-lg">&times;</button>
+      </div>
+      <p class="text-xs text-zinc-400 mb-4">Digite a senha de administrador para editar a página e publicar no GitHub/Vercel.</p>
+      <input type="password" id="adminPassInput" placeholder="Senha (padrão: admin123)" onkeydown="if(event.key==='Enter') verifyLogin()" class="w-full bg-[#0B0B0C] border border-zinc-800 focus:border-[#FF6B00] rounded-xl px-3.5 py-2.5 text-sm text-white outline-none mb-2" />
+      <p id="loginError" class="hidden text-xs text-red-400 mb-3">Senha incorreta.</p>
+      <button onclick="verifyLogin()" class="w-full mt-2 py-2.5 rounded-xl bg-[#FF6B00] hover:bg-[#e56000] text-white font-semibold text-sm transition-colors">Entrar no Painel</button>
+    </div>
+  </div>
+
+  <!-- PAINEL ADMINISTRATIVO -->
+  <div id="adminPanel" class="hidden fixed inset-0 z-50 bg-[#0B0B0C]/95 backdrop-blur-md overflow-y-auto">
+    <div class="max-w-3xl mx-auto px-4 py-6 pb-24">
+      <div class="flex flex-wrap items-center justify-between gap-3 pb-5 border-b border-zinc-800">
+        <div>
+          <span class="text-[11px] font-bold uppercase tracking-wider text-[#FF6B00]">Painel de Controle • GitHub Sync</span>
+          <h2 class="text-lg font-bold text-white">Administrar Página de Links</h2>
+        </div>
+        <div class="flex items-center gap-2">
+          <button onclick="publishToGitHub()" id="btnPublish" class="px-4 py-2 rounded-xl bg-[#FF6B00] hover:bg-[#e56000] text-xs font-bold text-white shadow-lg transition-all flex items-center gap-1.5">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
+            <span>Publicar no Site (Vercel)</span>
+          </button>
+          <button onclick="closeAdminPanel()" class="px-3.5 py-2 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-xs font-semibold text-white transition-colors">Fechar</button>
+        </div>
+      </div>
+
+      <!-- Status de Publicação -->
+      <div id="publishStatus" class="hidden mt-4 p-3.5 rounded-xl border text-xs"></div>
+
+      <!-- Abas -->
+      <div class="flex gap-2 mt-5 border-b border-zinc-800/80 pb-3 overflow-x-auto">
+        <button onclick="switchTab('links')" id="tabBtn-links" class="tab-btn px-4 py-2 rounded-lg text-xs font-semibold bg-[#FF6B00] text-white">Botões & Links</button>
+        <button onclick="switchTab('profile')" id="tabBtn-profile" class="tab-btn px-4 py-2 rounded-lg text-xs font-semibold bg-zinc-900 text-zinc-400 hover:text-white">Perfil & Visual</button>
+        <button onclick="switchTab('github')" id="tabBtn-github" class="tab-btn px-4 py-2 rounded-lg text-xs font-semibold bg-zinc-900 text-zinc-400 hover:text-white">Conexão GitHub & Senha</button>
+      </div>
+
+      <!-- ABA 1: BOTÕES -->
+      <div id="tab-links" class="mt-6 space-y-6">
+        <div class="bg-[#141416] border border-zinc-800 rounded-2xl p-5">
+          <h3 class="text-sm font-bold text-white mb-4" id="formLinkTitle">Adicionar Novo Botão</h3>
+          <input type="hidden" id="editLinkId" value="" />
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+            <div>
+              <label class="block text-xs text-zinc-400 mb-1">Título do Botão *</label>
+              <input type="text" id="linkTitle" placeholder="Ex: Acessar o CotaPlan" class="w-full bg-[#0B0B0C] border border-zinc-800 focus:border-[#FF6B00] rounded-xl px-3.5 py-2.5 text-sm text-white outline-none" />
+            </div>
+            <div>
+              <label class="block text-xs text-zinc-400 mb-1">Subtítulo (Opcional)</label>
+              <input type="text" id="linkSubtitle" placeholder="Ex: Planejamento & Gestão de Obras" class="w-full bg-[#0B0B0C] border border-zinc-800 focus:border-[#FF6B00] rounded-xl px-3.5 py-2.5 text-sm text-white outline-none" />
+            </div>
+            <div>
+              <label class="block text-xs text-zinc-400 mb-1">URL de Destino *</label>
+              <input type="url" id="linkUrl" placeholder="https://..." class="w-full bg-[#0B0B0C] border border-zinc-800 focus:border-[#FF6B00] rounded-xl px-3.5 py-2.5 text-sm text-white outline-none" />
+            </div>
+            <div class="grid grid-cols-2 gap-2.5">
+              <div>
+                <label class="block text-xs text-zinc-400 mb-1">Estilo Visual</label>
+                <select id="linkStyle" class="w-full bg-[#0B0B0C] border border-zinc-800 focus:border-[#FF6B00] rounded-xl px-3 py-2.5 text-sm text-white outline-none">
+                  <option value="primary">Destaque Laranja</option>
+                  <option value="secondary">Grafite Sólido</option>
+                  <option value="ghost">Contorno Minimalista</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-xs text-zinc-400 mb-1">Ícone</label>
+                <select id="linkIcon" class="w-full bg-[#0B0B0C] border border-zinc-800 focus:border-[#FF6B00] rounded-xl px-3 py-2.5 text-sm text-white outline-none">
+                  <option value="layers">Sistema / Obras</option>
+                  <option value="whatsapp">WhatsApp</option>
+                  <option value="linkedin">LinkedIn</option>
+                  <option value="globe">Site / Link</option>
+                  <option value="shield">Segurança / Tech</option>
+                  <option value="document">Portfólio / PDF</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="flex items-center justify-end gap-2 mt-4">
+            <button type="button" id="cancelEditBtn" onclick="resetLinkForm()" class="hidden px-4 py-2 rounded-xl bg-zinc-800 text-xs font-semibold text-zinc-300">Cancelar</button>
+            <button type="button" onclick="saveLink()" class="px-5 py-2.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 text-xs font-bold text-white">Salvar na Lista</button>
+          </div>
+        </div>
+
+        <div class="bg-[#141416] border border-zinc-800 rounded-2xl p-5">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-sm font-bold text-white">Links Cadastrados</h3>
+            <span class="text-[11px] text-zinc-500">Clique em "Publicar no Site" no topo após editar</span>
+          </div>
+          <div id="adminLinksList" class="space-y-2.5"></div>
+        </div>
+      </div>
+
+      <!-- ABA 2: PERFIL & VISUAL -->
+      <div id="tab-profile" class="hidden mt-6 space-y-6">
+        <div class="bg-[#141416] border border-zinc-800 rounded-2xl p-5 space-y-4">
+          <h3 class="text-sm font-bold text-white">Foto Principal & Identidade</h3>
+          <div class="flex flex-col sm:flex-row items-center gap-4 pb-4 border-b border-zinc-800/80">
+            <div class="w-20 h-20 rounded-full bg-zinc-900 border-2 border-[#FF6B00] overflow-hidden flex items-center justify-center shrink-0">
+              <img id="adminAvatarPreview" src="" class="hidden w-full h-full object-cover" />
+              <span id="adminAvatarInitials" class="text-lg font-bold text-zinc-400">AS</span>
+            </div>
+            <div class="flex-1 text-center sm:text-left">
+              <label class="inline-block cursor-pointer px-4 py-2 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-xs font-semibold text-white transition-colors">
+                Escolher Foto da Galeria
+                <input type="file" accept="image/*" onchange="handleAvatarUpload(event)" class="hidden" />
+              </label>
+              <button onclick="removeAvatar()" class="ml-2 px-3 py-2 rounded-xl bg-zinc-900 hover:bg-red-950/50 text-xs text-zinc-400 hover:text-red-400">Remover</button>
+              <p class="text-[11px] text-zinc-500 mt-1.5">A imagem é otimizada automaticamente para o GitHub.</p>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs text-zinc-400 mb-1">Nome Principal</label>
+              <input type="text" id="cfgName" oninput="updateProfilePreview()" class="w-full bg-[#0B0B0C] border border-zinc-800 focus:border-[#FF6B00] rounded-xl px-3.5 py-2.5 text-sm text-white outline-none" />
+            </div>
+            <div>
+              <label class="block text-xs text-zinc-400 mb-1">Selo Superior (Badge)</label>
+              <input type="text" id="cfgBadge" oninput="updateProfilePreview()" class="w-full bg-[#0B0B0C] border border-zinc-800 focus:border-[#FF6B00] rounded-xl px-3.5 py-2.5 text-sm text-white outline-none" />
+            </div>
+            <div class="sm:col-span-2">
+              <label class="block text-xs text-zinc-400 mb-1">Subtítulo / Especialidade</label>
+              <input type="text" id="cfgSubtitle" oninput="updateProfilePreview()" class="w-full bg-[#0B0B0C] border border-zinc-800 focus:border-[#FF6B00] rounded-xl px-3.5 py-2.5 text-sm text-white outline-none" />
+            </div>
+            <div>
+              <label class="block text-xs text-zinc-400 mb-1">Textura de Fundo</label>
+              <select id="cfgBg" onchange="updateProfilePreview()" class="w-full bg-[#0B0B0C] border border-zinc-800 focus:border-[#FF6B00] rounded-xl px-3 py-2.5 text-sm text-white outline-none">
+                <option value="grid">Grade Engenharia (Padrão)</option>
+                <option value="radial">Luz Laranja Superior</option>
+                <option value="carbon">Fibra Escura Minimalista</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs text-zinc-400 mb-1">Cor de Destaque</label>
+              <div class="flex items-center gap-2">
+                <input type="color" id="cfgAccent" oninput="updateProfilePreview()" class="h-10 w-14 bg-transparent border-0 cursor-pointer" />
+                <button onclick="document.getElementById('cfgAccent').value='#FF6B00'; updateProfilePreview();" class="text-xs text-zinc-400 hover:text-white underline">Restaurar Laranja (#FF6B00)</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ABA 3: CONEXÃO GITHUB & SENHA -->
+      <div id="tab-github" class="hidden mt-6 space-y-6">
+        <div class="bg-[#141416] border border-zinc-800 rounded-2xl p-5 space-y-4">
+          <div class="flex items-center justify-between">
+            <h3 class="text-sm font-bold text-white">Configuração de Publicação Automática (GitHub)</h3>
+            <span class="px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 text-[11px] font-semibold">Salvo só neste aparelho</span>
+          </div>
+          <p class="text-xs text-zinc-400 leading-relaxed">Preencha os dados do seu repositório para que o botão <strong>"Publicar no Site"</strong> atualize o <code>config.json</code> direto no GitHub e dispare o deploy automático na Vercel.</p>
+          
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+            <div>
+              <label class="block text-xs text-zinc-400 mb-1">Seu Usuário do GitHub</label>
+              <input type="text" id="ghOwner" placeholder="ex: adrianodsousa" class="w-full bg-[#0B0B0C] border border-zinc-800 focus:border-[#FF6B00] rounded-xl px-3.5 py-2.5 text-sm text-white outline-none" />
+            </div>
+            <div>
+              <label class="block text-xs text-zinc-400 mb-1">Nome do Repositório</label>
+              <input type="text" id="ghRepo" placeholder="ex: cotaplan-links" class="w-full bg-[#0B0B0C] border border-zinc-800 focus:border-[#FF6B00] rounded-xl px-3.5 py-2.5 text-sm text-white outline-none" />
+            </div>
+            <div class="sm:col-span-2">
+              <label class="block text-xs text-zinc-400 mb-1">Personal Access Token (Fine-grained com permissão Contents: Read & Write)</label>
+              <input type="password" id="ghToken" placeholder="github_pat_..." class="w-full bg-[#0B0B0C] border border-zinc-800 focus:border-[#FF6B00] rounded-xl px-3.5 py-2.5 text-sm text-white outline-none" />
+            </div>
+          </div>
+          <button onclick="saveGitHubCreds()" class="px-4 py-2.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-xs font-semibold text-white">Salvar Credenciais neste Navegador</button>
+        </div>
+
+        <div class="bg-[#141416] border border-zinc-800 rounded-2xl p-5">
+          <h3 class="text-sm font-bold text-white mb-3">Alterar Senha do Painel Admin</h3>
+          <div class="flex gap-2">
+            <input type="password" id="newAdminPass" placeholder="Nova senha" class="flex-1 bg-[#0B0B0C] border border-zinc-800 rounded-xl px-3.5 py-2 text-sm text-white outline-none" />
+            <button onclick="changeAdminPassword()" class="px-4 py-2 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-xs font-semibold text-white">Atualizar Senha</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const PASS_KEY = 'cotaplan_admin_pass_v1';
+    const GH_CREDS_KEY = 'cotaplan_gh_creds_v1';
+
+    let appState = {
+      name: 'Adriano de Sousa',
+      subtitle: 'Planejamento Civil & Industrial | Cybersecurity',
+      badge: 'CRIADOR DO COTAPLAN',
+      avatar: '',
+      bgStyle: 'grid',
+      accentColor: '#FF6B00',
+      links: []
+    };
+
+    const ICONS = {
+      layers: `<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>`,
+      whatsapp: `<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 21l1.65-3.8a9 9 0 113.4 2.9L3 21"/><path stroke-linecap="round" stroke-linejoin="round" d="M9 10a.5.5 0 001 0V9a.5.5 0 00-1 0v1zm0 0a5 5 0 005 5h1a.5.5 0 000-1h-1a.5.5 0 000 1"/></svg>`,
+      linkedin: `<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg>`,
+      globe: `<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path stroke-linecap="round" stroke-linejoin="round" d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>`,
+      shield: `<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>`,
+      document: `<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>`
+    };
+
+    async function loadRemoteConfig() {
+      try {
+        const res = await fetch('./config.json?v=' + Date.now());
+        if (res.ok) {
+          const data = await res.json();
+          appState = { ...appState, ...data };
+        }
+      } catch (e) {
+        console.warn('Usando configuração padrão até o config.json ser publicado.');
+      }
+      renderPublicPage();
+    }
+
+    function renderPublicPage() {
+      document.documentElement.style.setProperty('--accent', appState.accentColor);
+      document.getElementById('ambientGlow').style.background = appState.accentColor;
+      document.getElementById('badgeDot').style.backgroundColor = appState.accentColor;
+      document.getElementById('footerDot').style.backgroundColor = appState.accentColor;
+      document.getElementById('avatarRing').style.background = `linear-gradient(135deg, ${appState.accentColor}, #3F3F46)`;
+
+      document.body.classList.remove('bg-grid', 'bg-radial', 'bg-carbon');
+      document.body.classList.add('bg-' + (appState.bgStyle || 'grid'));
+
+      document.getElementById('publicName').textContent = appState.name;
+      document.getElementById('publicSubtitle').textContent = appState.subtitle;
+      const badgeEl = document.getElementById('publicBadge');
+      if (appState.badge && appState.badge.trim() !== '') {
+        badgeEl.classList.remove('hidden');
+        document.getElementById('badgeText').textContent = appState.badge;
+      } else {
+        badgeEl.classList.add('hidden');
+      }
+
+      const img = document.getElementById('publicAvatar');
+      const fallback = document.getElementById('avatarFallback');
+      if (appState.avatar) {
+        img.src = appState.avatar;
+        img.classList.remove('hidden');
+        fallback.classList.add('hidden');
+      } else {
+        img.classList.add('hidden');
+        fallback.classList.remove('hidden');
+        const initials = appState.name.split(' ').map(n => n[0]).slice(0, 2).join('').toUpperCase();
+        fallback.textContent = initials || 'AS';
+      }
+
+      const container = document.getElementById('linksContainer');
+      container.innerHTML = '';
+      const activeLinks = (appState.links || []).filter(l => l.active);
+
+      activeLinks.forEach(link => {
+        const a = document.createElement('a');
+        a.href = link.url;
+        a.target = '_blank';
+        a.rel = 'noopener noreferrer';
+
+        let styleClass = 'btn-secondary';
+        if (link.style === 'primary') styleClass = 'btn-primary';
+        if (link.style === 'ghost') styleClass = 'btn-ghost';
+
+        a.className = `link-card w-full px-5 py-4 rounded-2xl flex items-center justify-between text-left ${styleClass}`;
+        a.innerHTML = `
+          <div class="flex items-center gap-3.5 min-w-0">
+            <div class="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${link.style === 'primary' ? 'bg-black/20 text-white' : 'bg-zinc-900/90 text-[#FF6B00]'}">
+              ${ICONS[link.icon] || ICONS.globe}
+            </div>
+            <div class="min-w-0">
+              <div class="font-bold text-[15px] leading-snug truncate">${escapeHtml(link.title)}</div>
+              ${link.subtitle ? `<div class="text-xs ${link.style === 'primary' ? 'text-white/85' : 'text-zinc-400'} truncate mt-0.5">${escapeHtml(link.subtitle)}</div>` : ''}
+            </div>
+          </div>
+          <svg class="w-4 h-4 shrink-0 opacity-70 ml-2" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+        `;
+        container.appendChild(a);
+      });
+    }
+
+    function openAdminModal() {
+      document.getElementById('loginModal').classList.remove('hidden');
+      document.getElementById('adminPassInput').value = '';
+      document.getElementById('loginError').classList.add('hidden');
+      setTimeout(() => document.getElementById('adminPassInput').focus(), 80);
+    }
+
+    function closeLoginModal() { document.getElementById('loginModal').classList.add('hidden'); }
+
+    function verifyLogin() {
+      const savedPass = localStorage.getItem(PASS_KEY) || 'admin123';
+      if (document.getElementById('adminPassInput').value === savedPass) {
+        closeLoginModal();
+        openAdminPanel();
+      } else {
+        document.getElementById('loginError').classList.remove('hidden');
+      }
+    }
+
+    function openAdminPanel() {
+      document.getElementById('adminPanel').classList.remove('hidden');
+      populateAdminFields();
+      renderAdminLinks();
+    }
+
+    function closeAdminPanel() { document.getElementById('adminPanel').classList.add('hidden'); }
+
+    function switchTab(tabName) {
+      ['links', 'profile', 'github'].forEach(t => {
+        document.getElementById('tab-' + t).classList.toggle('hidden', t !== tabName);
+        const btn = document.getElementById('tabBtn-' + t);
+        btn.className = t === tabName
+          ? 'tab-btn px-4 py-2 rounded-lg text-xs font-semibold bg-[#FF6B00] text-white'
+          : 'tab-btn px-4 py-2 rounded-lg text-xs font-semibold bg-zinc-900 text-zinc-400 hover:text-white';
+      });
+    }
+
+    function populateAdminFields() {
+      document.getElementById('cfgName').value = appState.name;
+      document.getElementById('cfgBadge').value = appState.badge;
+      document.getElementById('cfgSubtitle').value = appState.subtitle;
+      document.getElementById('cfgBg').value = appState.bgStyle || 'grid';
+      document.getElementById('cfgAccent').value = appState.accentColor || '#FF6B00';
+
+      const prev = document.getElementById('adminAvatarPreview');
+      const init = document.getElementById('adminAvatarInitials');
+      if (appState.avatar) {
+        prev.src = appState.avatar;
+        prev.classList.remove('hidden');
+        init.classList.add('hidden');
+      } else {
+        prev.classList.add('hidden');
+        init.classList.remove('hidden');
+      }
+
+      const gh = JSON.parse(localStorage.getItem(GH_CREDS_KEY) || '{}');
+      document.getElementById('ghOwner').value = gh.owner || '';
+      document.getElementById('ghRepo').value = gh.repo || '';
+      document.getElementById('ghToken').value = gh.token || '';
+    }
+
+    function updateProfilePreview() {
+      appState.name = document.getElementById('cfgName').value.trim() || 'Adriano de Sousa';
+      appState.badge = document.getElementById('cfgBadge').value.trim();
+      appState.subtitle = document.getElementById('cfgSubtitle').value.trim();
+      appState.bgStyle = document.getElementById('cfgBg').value;
+      appState.accentColor = document.getElementById('cfgAccent').value;
+      renderPublicPage();
+    }
+
+    function handleAvatarUpload(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(event) {
+        const img = new Image();
+        img.onload = function() {
+          const canvas = document.createElement('canvas');
+          const size = 260;
+          canvas.width = size;
+          canvas.height = size;
+          const ctx = canvas.getContext('2d');
+          const minSide = Math.min(img.width, img.height);
+          const sx = (img.width - minSide) / 2;
+          const sy = (img.height - minSide) / 2;
+          ctx.drawImage(img, sx, sy, minSide, minSide, 0, 0, size, size);
+          appState.avatar = canvas.toDataURL('image/jpeg', 0.82);
+          populateAdminFields();
+          renderPublicPage();
+        };
+        img.src = event.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function removeAvatar() {
+      appState.avatar = '';
+      populateAdminFields();
+      renderPublicPage();
+    }
+
+    function renderAdminLinks() {
+      const list = document.getElementById('adminLinksList');
+      list.innerHTML = '';
+      appState.links.forEach((link, idx) => {
+        const item = document.createElement('div');
+        item.className = `p-3.5 rounded-xl border ${link.active ? 'bg-[#0B0B0C] border-zinc-800' : 'bg-[#0B0B0C]/40 border-zinc-900 opacity-60'} flex flex-wrap items-center justify-between gap-3`;
+        item.innerHTML = `
+          <div class="flex items-center gap-3 min-w-0 flex-1">
+            <div class="flex flex-col gap-1">
+              <button onclick="moveLink(${idx}, -1)" ${idx === 0 ? 'disabled' : ''} class="text-zinc-500 hover:text-white disabled:opacity-20 text-xs">▲</button>
+              <button onclick="moveLink(${idx}, 1)" ${idx === appState.links.length - 1 ? 'disabled' : ''} class="text-zinc-500 hover:text-white disabled:opacity-20 text-xs">▼</button>
+            </div>
+            <div class="min-w-0">
+              <div class="flex items-center gap-2">
+                <span class="font-semibold text-sm text-white truncate">${escapeHtml(link.title)}</span>
+                <span class="text-[10px] px-2 py-0.5 rounded bg-zinc-800 text-zinc-300 uppercase">${link.style}</span>
+              </div>
+              <div class="text-xs text-zinc-500 truncate">${escapeHtml(link.url)}</div>
+            </div>
+          </div>
+          <div class="flex items-center gap-1.5">
+            <button onclick="toggleLinkActive('${link.id}')" class="px-2.5 py-1.5 rounded-lg bg-zinc-900 hover:bg-zinc-800 text-xs text-zinc-300">${link.active ? 'Ocultar' : 'Ativar'}</button>
+            <button onclick="editLink('${link.id}')" class="px-2.5 py-1.5 rounded-lg bg-zinc-900 hover:bg-zinc-800 text-xs text-amber-400">Editar</button>
+            <button onclick="deleteLink('${link.id}')" class="px-2.5 py-1.5 rounded-lg bg-zinc-900 hover:bg-red-950/60 text-xs text-red-400">Excluir</button>
+          </div>
+        `;
+        list.appendChild(item);
+      });
+    }
+
+    function saveLink() {
+      const id = document.getElementById('editLinkId').value;
+      const title = document.getElementById('linkTitle').value.trim();
+      const subtitle = document.getElementById('linkSubtitle').value.trim();
+      let url = document.getElementById('linkUrl').value.trim();
+      const style = document.getElementById('linkStyle').value;
+      const icon = document.getElementById('linkIcon').value;
+
+      if (!title || !url) return alert('Preencha o Título e a URL.');
+      if (!/^https?:\/\//i.test(url)) url = 'https://' + url;
+
+      if (id) {
+        const idx = appState.links.findIndex(l => l.id === id);
+        if (idx > -1) appState.links[idx] = { ...appState.links[idx], title, subtitle, url, style, icon };
+      } else {
+        appState.links.push({ id: 'link-' + Date.now(), title, subtitle, url, style, icon, active: true });
+      }
+      resetLinkForm();
+      renderAdminLinks();
+      renderPublicPage();
+    }
+
+    function editLink(id) {
+      const link = appState.links.find(l => l.id === id);
+      if (!link) return;
+      document.getElementById('formLinkTitle').textContent = 'Editar Botão';
+      document.getElementById('editLinkId').value = link.id;
+      document.getElementById('linkTitle').value = link.title;
+      document.getElementById('linkSubtitle').value = link.subtitle || '';
+      document.getElementById('linkUrl').value = link.url;
+      document.getElementById('linkStyle').value = link.style;
+      document.getElementById('linkIcon').value = link.icon;
+      document.getElementById('cancelEditBtn').classList.remove('hidden');
+    }
+
+    function resetLinkForm() {
+      document.getElementById('formLinkTitle').textContent = 'Adicionar Novo Botão';
+      document.getElementById('editLinkId').value = '';
+      document.getElementById('linkTitle').value = '';
+      document.getElementById('linkSubtitle').value = '';
+      document.getElementById('linkUrl').value = '';
+      document.getElementById('cancelEditBtn').classList.add('hidden');
+    }
+
+    function deleteLink(id) {
+      if (!confirm('Excluir este botão?')) return;
+      appState.links = appState.links.filter(l => l.id !== id);
+      renderAdminLinks();
+      renderPublicPage();
+    }
+
+    function toggleLinkActive(id) {
+      const link = appState.links.find(l => l.id === id);
+      if (link) { link.active = !link.active; renderAdminLinks(); renderPublicPage(); }
+    }
+
+    function moveLink(index, dir) {
+      const target = index + dir;
+      if (target < 0 || target >= appState.links.length) return;
+      const temp = appState.links[index];
+      appState.links[index] = appState.links[target];
+      appState.links[target] = temp;
+      renderAdminLinks();
+      renderPublicPage();
+    }
+
+    function saveGitHubCreds() {
+      const creds = {
+        owner: document.getElementById('ghOwner').value.trim(),
+        repo: document.getElementById('ghRepo').value.trim(),
+        token: document.getElementById('ghToken').value.trim()
+      };
+      localStorage.setItem(GH_CREDS_KEY, JSON.stringify(creds));
+      showStatus('Credenciais do GitHub salvas neste aparelho.', 'success');
+    }
+
+    async function publishToGitHub() {
+      const creds = JSON.parse(localStorage.getItem(GH_CREDS_KEY) || '{}');
+      if (!creds.owner || !creds.repo || !creds.token) {
+        switchTab('github');
+        return showStatus('Preencha seu Usuário, Repositório e Token do GitHub antes de publicar.', 'error');
+      }
+
+      const btn = document.getElementById('btnPublish');
+      btn.disabled = true;
+      btn.innerHTML = '<span>Publicando...</span>';
+
+      try {
+        const apiUrl = `https://api.github.com/repos/${creds.owner}/${creds.repo}/contents/config.json`;
+        const headers = {
+          'Authorization': `Bearer ${creds.token}`,
+          'Accept': 'application/vnd.github+json',
+          'Content-Type': 'application/json'
+        };
+
+        let sha = null;
+        const getRes = await fetch(apiUrl, { headers });
+        if (getRes.ok) {
+          const fileData = await getRes.json();
+          sha = fileData.sha;
+        }
+
+        const jsonString = JSON.stringify(appState, null, 2);
+        const base64Content = btoa(unescape(encodeURIComponent(jsonString)));
+
+        const putRes = await fetch(apiUrl, {
+          method: 'PUT',
+          headers,
+          body: JSON.stringify({
+            message: 'Atualização via Painel Admin CotaPlan',
+            content: base64Content,
+            ...(sha ? { sha } : {})
+          })
+        });
+
+        if (!putRes.ok) throw new Error('Falha na API do GitHub. Verifique o Token e o nome do repositório.');
+
+        showStatus('Publicado com sucesso! A Vercel atualizará o site para todos em ~15 segundos.', 'success');
+      } catch (err) {
+        showStatus(err.message, 'error');
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = `<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg><span>Publicar no Site (Vercel)</span>`;
+      }
+    }
+
+    function showStatus(msg, type) {
+      const el = document.getElementById('publishStatus');
+      el.classList.remove('hidden', 'bg-emerald-950/60', 'border-emerald-800', 'text-emerald-300', 'bg-red-950/60', 'border-red-800', 'text-red-300');
+      if (type === 'success') {
+        el.classList.add('bg-emerald-950/60', 'border-emerald-800', 'text-emerald-300');
+      } else {
+        el.classList.add('bg-red-950/60', 'border-red-800', 'text-red-300');
+      }
+      el.textContent = msg;
+    }
+
+    function changeAdminPassword() {
+      const np = document.getElementById('newAdminPass').value.trim();
+      if (np.length < 4) return alert('A senha precisa ter pelo menos 4 caracteres.');
+      localStorage.setItem(PASS_KEY, np);
+      document.getElementById('newAdminPass').value = '';
+      showStatus('Senha alterada com sucesso.', 'success');
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return str.replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]));
+    }
+
+    loadRemoteConfig();
+  </script>
+</body>
+</html>
