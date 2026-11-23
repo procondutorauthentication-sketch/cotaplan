@@ -1,0 +1,37 @@
+{
+  "name": "Adriano de Sousa",
+  "subtitle": "Planejamento Civil & Industrial | Cybersecurity",
+  "badge": "CRIADOR DO COTAPLAN",
+  "avatar": "",
+  "bgStyle": "grid",
+  "accentColor": "#FF6B00",
+  "links": [
+    {
+      "id": "link-1",
+      "title": "Acessar o CotaPlan",
+      "subtitle": "Planejamento & Gestão de Obras",
+      "url": "https://cotaplan.com.br",
+      "icon": "layers",
+      "style": "primary",
+      "active": true
+    },
+    {
+      "id": "link-2",
+      "title": "Falar comigo no WhatsApp",
+      "subtitle": "Dúvidas, demonstração ou parcerias",
+      "url": "https://wa.me/5500000000000",
+      "icon": "whatsapp",
+      "style": "secondary",
+      "active": true
+    },
+    {
+      "id": "link-3",
+      "title": "Conectar no LinkedIn",
+      "subtitle": "",
+      "url": "https://www.linkedin.com/in/adriano-de-sousa-b38818298/",
+      "icon": "linkedin",
+      "style": "ghost",
+      "active": true
+    }
+  ]
+}
